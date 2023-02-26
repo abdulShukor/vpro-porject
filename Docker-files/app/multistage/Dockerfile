@@ -2,8 +2,8 @@ FROM openjdk:8 AS BUILD_IMAGE
 LABEL "Project"="Vprofile"
 LABEL "Author"="Abdul"
 RUN apt update && apt install maven -y
-RUN git clone -b vp-docker https://github.com/imranvisualpath/vprofile-repo.git
-RUN cd vprofile-repo && mvn install
+RUN git clone https://github.com/abdulShukor/vpro-porject.git
+RUN cd vpro-porject && mvn install
 
 FROM tomcat:8-jre11
 
