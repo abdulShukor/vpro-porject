@@ -59,12 +59,12 @@ pipeline {
             }
         }
 
- stage("UploadArtifact"){
+  stage("UploadArtifact"){
             steps{
                 nexusArtifactUploader(
                   nexusVersion: 'nexus3',
                   protocol: 'http',
-                  nexusUrl: '172.31.16.73:8081',
+                  nexusUrl: '${nexusurl}',
                   groupId: 'QA',
                   version: "${env.BUILD_ID}-${env.BUILD_TIMESTAMP}",
                   repository: 'vprofile-repo',
@@ -74,12 +74,18 @@ pipeline {
                      classifier: '',
                      file: 'target/vprofile-v2.war',
                      type: 'war']
-    ]
- )
+                  ]
+                )
             }
         }
-
-
-
     }
+    post {
+        always {
+            echo 'Slack Notifications.'
+            slackSend channel: '#dev',
+                color: COLOR_MAP[currentBuild.currentResult],
+                message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+        }
+    }
+    
 }
